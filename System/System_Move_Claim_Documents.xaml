@@ -6,7 +6,7 @@
   <mva:VisualBasic.Settings>
     <x:Null />
   </mva:VisualBasic.Settings>
-  <sap:VirtualizedContainerService.HintSize>680,519</sap:VirtualizedContainerService.HintSize>
+  <sap:VirtualizedContainerService.HintSize>1186,831</sap:VirtualizedContainerService.HintSize>
   <sap2010:WorkflowViewState.IdRef>System_Move_Claim_Documents_1</sap2010:WorkflowViewState.IdRef>
   <TextExpression.NamespacesForImplementation>
     <sco:Collection x:TypeArguments="x:String">
@@ -60,24 +60,43 @@
       <AssemblyReference>System.ServiceModel</AssemblyReference>
       <AssemblyReference>System.Management.Automation</AssemblyReference>
       <AssemblyReference>System.Runtime.WindowsRuntime</AssemblyReference>
+      <AssemblyReference>UiPath.System.Activities.Design</AssemblyReference>
     </sco:Collection>
   </TextExpression.ReferencesForImplementation>
-  <Sequence DisplayName="System_Move_Claim_Documents" sap:VirtualizedContainerService.HintSize="376,252" sap2010:WorkflowViewState.IdRef="Sequence_1">
+  <Sequence DisplayName="System_Move_Claim_Documents" sap:VirtualizedContainerService.HintSize="426,471" sap2010:WorkflowViewState.IdRef="Sequence_1">
     <sap:WorkflowViewStateService.ViewState>
       <scg:Dictionary x:TypeArguments="x:String, x:Object">
         <x:Boolean x:Key="IsExpanded">True</x:Boolean>
       </scg:Dictionary>
     </sap:WorkflowViewStateService.ViewState>
-    <ui:InvokePowerShell x:TypeArguments="sma:PSObject" ContinueOnError="{x:Null}" CommandText="Move-Item" DisplayName="Invoke Power Shell" sap:VirtualizedContainerService.HintSize="334,59" sap2010:WorkflowViewState.IdRef="InvokePowerShell`1_1">
-      <ui:InvokePowerShell.Parameters>
-        <InArgument x:TypeArguments="x:String" x:Key="Path">
-          <mva:VisualBasicValue x:TypeArguments="x:String" ExpressionText="in_stringPath+&quot;Documents\Pending\&quot; +in_TransactionItem" />
-        </InArgument>
-        <InArgument x:TypeArguments="x:String" x:Key="Destination">
-          <mva:VisualBasicValue x:TypeArguments="x:String" ExpressionText="in_stringPath+&quot;Documents\Treated\&quot;+in_TransactionItem" />
-        </InArgument>
-      </ui:InvokePowerShell.Parameters>
-    </ui:InvokePowerShell>
-    <WriteLine DisplayName="Write Line" sap:VirtualizedContainerService.HintSize="334,61" sap2010:WorkflowViewState.IdRef="WriteLine_1" Text="[&quot;Docuement folder for claim &quot; + in_TransactionItem + &quot; moved to treated directory&quot;]" />
+    <ui:MoveFile ContinueOnError="{x:Null}" Destination="[in_stringPath+&quot;Documents\Treated\&quot;+in_TransactionItem]" DisplayName="Move File" sap:VirtualizedContainerService.HintSize="384,157" sap2010:WorkflowViewState.IdRef="MoveFile_1" Overwrite="True" Path="[in_stringPath+&quot;Documents\Pending\&quot; +in_TransactionItem]" />
+    <ui:CommentOut DisplayName="Comment Out (Old)" sap:VirtualizedContainerService.HintSize="384,51" sap2010:WorkflowViewState.IdRef="CommentOut_1">
+      <ui:CommentOut.Body>
+        <Sequence DisplayName="Ignored Activities" sap:VirtualizedContainerService.HintSize="376,151" sap2010:WorkflowViewState.IdRef="Sequence_2">
+          <sap:WorkflowViewStateService.ViewState>
+            <scg:Dictionary x:TypeArguments="x:String, x:Object">
+              <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            </scg:Dictionary>
+          </sap:WorkflowViewStateService.ViewState>
+          <ui:InvokePowerShell x:TypeArguments="sma:PSObject" ContinueOnError="{x:Null}" CommandText="Move-Item" DisplayName="Invoke Power Shell" sap:VirtualizedContainerService.HintSize="334,59" sap2010:WorkflowViewState.IdRef="InvokePowerShell`1_1">
+            <ui:InvokePowerShell.Parameters>
+              <InArgument x:TypeArguments="x:String" x:Key="Path">
+                <mva:VisualBasicValue x:TypeArguments="x:String" ExpressionText="in_stringPath+&quot;Documents\Pending\&quot; +in_TransactionItem" />
+              </InArgument>
+              <InArgument x:TypeArguments="x:String" x:Key="Destination">
+                <mva:VisualBasicValue x:TypeArguments="x:String" ExpressionText="in_stringPath+&quot;Documents\Treated\&quot;+in_TransactionItem" />
+              </InArgument>
+            </ui:InvokePowerShell.Parameters>
+          </ui:InvokePowerShell>
+        </Sequence>
+      </ui:CommentOut.Body>
+      <sap:WorkflowViewStateService.ViewState>
+        <scg:Dictionary x:TypeArguments="x:String, x:Object">
+          <x:Boolean x:Key="IsExpanded">False</x:Boolean>
+          <x:Boolean x:Key="IsPinned">False</x:Boolean>
+        </scg:Dictionary>
+      </sap:WorkflowViewStateService.ViewState>
+    </ui:CommentOut>
+    <ui:LogMessage DisplayName="Log Message" sap:VirtualizedContainerService.HintSize="384,91" sap2010:WorkflowViewState.IdRef="LogMessage_1" Level="Trace" Message="[&quot;Docuement folder for claim &quot; + in_TransactionItem + &quot; moved to treated directory&quot;]" />
   </Sequence>
 </Activity>
