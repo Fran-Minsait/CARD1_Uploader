@@ -2,16 +2,15 @@
   <x:Members>
     <x:Property Name="in_Config" Type="InArgument(scg:Dictionary(x:String, x:Object))" />
     <x:Property Name="in_TransactionItem" Type="InArgument(x:String)" />
-    <x:Property Name="in_dataRowDocument" Type="InArgument(sd:DataRow)" />
-    <x:Property Name="in_stringDocumentName" Type="InArgument(x:String)" />
+    <x:Property Name="in_dtDocuments" Type="InArgument(sd:DataTable)" />
   </x:Members>
   <mva:VisualBasic.Settings>
     <x:Null />
   </mva:VisualBasic.Settings>
-  <sap:VirtualizedContainerService.HintSize>1186,832</sap:VirtualizedContainerService.HintSize>
+  <sap:VirtualizedContainerService.HintSize>1206,1042</sap:VirtualizedContainerService.HintSize>
   <sap2010:WorkflowViewState.IdRef>Process_1</sap2010:WorkflowViewState.IdRef>
   <TextExpression.NamespacesForImplementation>
-    <scg:List x:TypeArguments="x:String" Capacity="21">
+    <scg:List x:TypeArguments="x:String" Capacity="22">
       <x:String>System.Activities</x:String>
       <x:String>System.Activities.Statements</x:String>
       <x:String>System.Activities.Expressions</x:String>
@@ -33,6 +32,7 @@
       <x:String>System.Windows.Markup</x:String>
       <x:String>UiPath.Core</x:String>
       <x:String>UiPath.Core.Activities</x:String>
+      <x:String>System.Xml.Serialization</x:String>
     </scg:List>
   </TextExpression.NamespacesForImplementation>
   <TextExpression.ReferencesForImplementation>
@@ -66,33 +66,33 @@
   <Flowchart sap2010:Annotation.AnnotationText="Uploads a file into claim center. Then, checks the item is present in the system." DisplayName="Process" sap:VirtualizedContainerService.HintSize="634,667" sap2010:WorkflowViewState.IdRef="Flowchart_1">
     <Flowchart.Variables>
       <Variable x:TypeArguments="x:Boolean" Name="boolDocumentExist" />
+      <Variable x:TypeArguments="scg:List(x:String)" Name="listStringClaimDocuments" />
     </Flowchart.Variables>
     <sap:WorkflowViewStateService.ViewState>
       <scg:Dictionary x:TypeArguments="x:String, x:Object">
         <x:Boolean x:Key="IsExpanded">True</x:Boolean>
         <av:Point x:Key="ShapeLocation">270,2.5</av:Point>
         <av:Size x:Key="ShapeSize">60,75</av:Size>
-        <av:PointCollection x:Key="ConnectorLocation">300,77.5 300,114.5</av:PointCollection>
+        <av:PointCollection x:Key="ConnectorLocation">300,77.5 300,117.5</av:PointCollection>
         <x:Boolean x:Key="IsAnnotationDocked">True</x:Boolean>
       </scg:Dictionary>
     </sap:WorkflowViewStateService.ViewState>
     <Flowchart.StartNode>
-      <x:Reference>__ReferenceID5</x:Reference>
+      <x:Reference>__ReferenceID4</x:Reference>
     </Flowchart.StartNode>
-    <FlowStep x:Name="__ReferenceID2">
+    <FlowStep x:Name="__ReferenceID0">
       <sap:WorkflowViewStateService.ViewState>
         <scg:Dictionary x:TypeArguments="x:String, x:Object">
-          <av:Point x:Key="ShapeLocation">200,204.5</av:Point>
+          <av:Point x:Key="ShapeLocation">200,214.5</av:Point>
           <av:Size x:Key="ShapeSize">200,51</av:Size>
-          <av:PointCollection x:Key="ConnectorLocation">300,255.5 300,294.5</av:PointCollection>
+          <av:PointCollection x:Key="ConnectorLocation">300,265.5 300,305.5</av:PointCollection>
         </scg:Dictionary>
       </sap:WorkflowViewStateService.ViewState>
-      <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Invoke GW_Azioni_Indica-Esistenza-Documento workflow" sap:VirtualizedContainerService.HintSize="200,51" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_1" UnSafe="False" WorkflowFileName="Navigazione\GW\GW_Azioni_Indica-Esistenza-Documento.xaml">
+      <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Invoke GW_Ricerca workflow" sap:VirtualizedContainerService.HintSize="200,51" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_6" UnSafe="False" WorkflowFileName="Navigazione\GW\GW_Ricerca.xaml">
         <ui:InvokeWorkflowFile.Arguments>
-          <InArgument x:TypeArguments="sd:DataRow" x:Key="in_dataRowDocument">[in_dataRowDocument]</InArgument>
-          <InArgument x:TypeArguments="x:String" x:Key="in_stringNSinistro">[in_TransactionItem]</InArgument>
-          <InArgument x:TypeArguments="x:String" x:Key="in_stringDocumentName">[in_stringDocumentName]</InArgument>
-          <InArgument x:TypeArguments="x:String" x:Key="in_stringPath">[in_Config("CARD1_Uploader_Root_Path").ToString]</InArgument>
+          <InArgument x:TypeArguments="x:String" x:Key="in_sinistro">
+            <mva:VisualBasicValue x:TypeArguments="x:String" ExpressionText="in_TransactionItem" />
+          </InArgument>
         </ui:InvokeWorkflowFile.Arguments>
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
@@ -101,55 +101,62 @@
         </sap:WorkflowViewStateService.ViewState>
       </ui:InvokeWorkflowFile>
       <FlowStep.Next>
-        <FlowStep x:Name="__ReferenceID0">
+        <FlowStep x:Name="__ReferenceID1">
           <sap:WorkflowViewStateService.ViewState>
             <scg:Dictionary x:TypeArguments="x:String, x:Object">
-              <av:Point x:Key="ShapeLocation">200,294.5</av:Point>
+              <av:Point x:Key="ShapeLocation">200,305.5</av:Point>
               <av:Size x:Key="ShapeSize">200,51</av:Size>
-              <av:PointCollection x:Key="ConnectorLocation">300,345.5 300,395.5</av:PointCollection>
+              <av:PointCollection x:Key="ConnectorLocation">300,356.5 300,406.5</av:PointCollection>
             </scg:Dictionary>
           </sap:WorkflowViewStateService.ViewState>
-          <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Invoke GW_Evento_Documenti workflow" sap:VirtualizedContainerService.HintSize="200,51" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_2" UnSafe="False" WorkflowFileName="Navigazione\GW\GW_Evento_Documenti.xaml">
-            <ui:InvokeWorkflowFile.Arguments>
-              <InArgument x:TypeArguments="x:String" x:Key="inStrDocumentName">
-                <mva:VisualBasicValue x:TypeArguments="x:String" ExpressionText="in_stringDocumentName" />
-              </InArgument>
-              <OutArgument x:TypeArguments="x:Boolean" x:Key="outBoolDocumentExists">
-                <mva:VisualBasicReference x:TypeArguments="x:Boolean" ExpressionText="boolDocumentExist" />
-              </OutArgument>
-            </ui:InvokeWorkflowFile.Arguments>
-            <sap:WorkflowViewStateService.ViewState>
-              <scg:Dictionary x:TypeArguments="x:String, x:Object">
-                <x:Boolean x:Key="IsExpanded">True</x:Boolean>
-              </scg:Dictionary>
-            </sap:WorkflowViewStateService.ViewState>
-          </ui:InvokeWorkflowFile>
-          <FlowStep.Next>
-            <FlowDecision x:Name="__ReferenceID3" DisplayName="Document" sap:VirtualizedContainerService.HintSize="70,87" sap2010:WorkflowViewState.IdRef="FlowDecision_1">
-              <FlowDecision.Condition>
-                <mva:VisualBasicValue x:TypeArguments="x:Boolean" ExpressionText="boolDocumentExist" />
-              </FlowDecision.Condition>
-              <sap:WorkflowViewStateService.ViewState>
-                <scg:Dictionary x:TypeArguments="x:String, x:Object">
-                  <x:Boolean x:Key="IsExpanded">True</x:Boolean>
-                  <av:Point x:Key="ShapeLocation">265,395.5</av:Point>
-                  <av:Size x:Key="ShapeSize">70,87</av:Size>
-                  <av:PointCollection x:Key="TrueConnector">265,439 150,439 150,494.5</av:PointCollection>
-                  <av:PointCollection x:Key="FalseConnector">335,439 385,439</av:PointCollection>
-                </scg:Dictionary>
-              </sap:WorkflowViewStateService.ViewState>
-              <FlowDecision.True>
-                <FlowStep x:Name="__ReferenceID1">
+          <ui:ForEach x:TypeArguments="x:String" CurrentIndex="{x:Null}" DisplayName="For Each | Document in list" sap:VirtualizedContainerService.HintSize="657,842" sap2010:WorkflowViewState.IdRef="ForEach`1_1" Values="[listStringClaimDocuments]">
+            <ui:ForEach.Body>
+              <ActivityAction x:TypeArguments="x:String">
+                <ActivityAction.Argument>
+                  <DelegateInArgument x:TypeArguments="x:String" Name="item" />
+                </ActivityAction.Argument>
+                <Sequence DisplayName="Body" sap:VirtualizedContainerService.HintSize="621,708" sap2010:WorkflowViewState.IdRef="Sequence_1">
+                  <Sequence.Variables>
+                    <Variable x:TypeArguments="sd:DataRow" Name="dataRowDocument" />
+                  </Sequence.Variables>
                   <sap:WorkflowViewStateService.ViewState>
                     <scg:Dictionary x:TypeArguments="x:String, x:Object">
-                      <av:Point x:Key="ShapeLocation">50,494.5</av:Point>
-                      <av:Size x:Key="ShapeSize">200,51</av:Size>
+                      <x:Boolean x:Key="IsExpanded">True</x:Boolean>
                     </scg:Dictionary>
                   </sap:WorkflowViewStateService.ViewState>
-                  <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Invoke GW_Evento_Note workflow" sap:VirtualizedContainerService.HintSize="200,51" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_3" UnSafe="False" WorkflowFileName="Navigazione\GW\GW_Evento_Note.xaml">
+                  <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Invoke System_Retrieve_DocumentDetails workflow" sap:VirtualizedContainerService.HintSize="579,87" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_8" UnSafe="False" WorkflowFileName="System\System_Retrieve_DocumentDetails.xaml">
                     <ui:InvokeWorkflowFile.Arguments>
-                      <InArgument x:TypeArguments="sd:DataRow" x:Key="in_dataRowDocument">[in_dataRowDocument]</InArgument>
-                      <InArgument x:TypeArguments="x:String" x:Key="in_stringNSinistro">[in_TransactionItem]</InArgument>
+                      <InArgument x:TypeArguments="x:String" x:Key="in_stringDocumentName">
+                        <mva:VisualBasicValue x:TypeArguments="x:String" ExpressionText="item" />
+                      </InArgument>
+                      <InArgument x:TypeArguments="sd:DataTable" x:Key="in_dtDocuments">
+                        <mva:VisualBasicValue x:TypeArguments="sd:DataTable" ExpressionText="in_dtDocuments" />
+                      </InArgument>
+                      <OutArgument x:TypeArguments="sd:DataRow" x:Key="out_dataRowDocument">
+                        <mva:VisualBasicReference x:TypeArguments="sd:DataRow" ExpressionText="dataRowDocument" />
+                      </OutArgument>
+                      <InArgument x:TypeArguments="x:String" x:Key="in_TransactionItem">
+                        <mva:VisualBasicValue x:TypeArguments="x:String" ExpressionText="in_TransactionItem" />
+                      </InArgument>
+                      <InArgument x:TypeArguments="scg:Dictionary(x:String, x:Object)" x:Key="in_Config">
+                        <mva:VisualBasicValue x:TypeArguments="scg:Dictionary(x:String, x:Object)" ExpressionText="in_Config" />
+                      </InArgument>
+                    </ui:InvokeWorkflowFile.Arguments>
+                  </ui:InvokeWorkflowFile>
+                  <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Invoke GW_Azioni_Indica-Esistenza-Documento workflow" sap:VirtualizedContainerService.HintSize="579,87" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_9" UnSafe="False" WorkflowFileName="Navigazione\GW\GW_Azioni_Indica-Esistenza-Documento.xaml">
+                    <ui:InvokeWorkflowFile.Arguments>
+                      <InArgument x:TypeArguments="sd:DataRow" x:Key="in_dataRowDocument">
+                        <mva:VisualBasicValue x:TypeArguments="sd:DataRow" ExpressionText="dataRowDocument" />
+                      </InArgument>
+                      <InArgument x:TypeArguments="x:String" x:Key="in_stringNSinistro">
+                        <mva:VisualBasicValue x:TypeArguments="x:String" ExpressionText="in_TransactionItem" />
+                      </InArgument>
+                      <InArgument x:TypeArguments="x:String" x:Key="in_stringDocumentName">
+                        <mva:VisualBasicValue x:TypeArguments="x:String" ExpressionText="item" />
+                      </InArgument>
+                      <InArgument x:TypeArguments="x:String" x:Key="in_stringPath">
+                        <mva:VisualBasicValue x:TypeArguments="x:String" ExpressionText="in_Config(&quot;CARD1_Uploader_Root_Path&quot;).ToString" />
+                      </InArgument>
                     </ui:InvokeWorkflowFile.Arguments>
                     <sap:WorkflowViewStateService.ViewState>
                       <scg:Dictionary x:TypeArguments="x:String, x:Object">
@@ -157,55 +164,129 @@
                       </scg:Dictionary>
                     </sap:WorkflowViewStateService.ViewState>
                   </ui:InvokeWorkflowFile>
-                </FlowStep>
-              </FlowDecision.True>
-              <FlowDecision.False>
-                <FlowStep x:Name="__ReferenceID4">
-                  <sap:WorkflowViewStateService.ViewState>
-                    <scg:Dictionary x:TypeArguments="x:String, x:Object">
-                      <av:Point x:Key="ShapeLocation">385,428</av:Point>
-                      <av:Size x:Key="ShapeSize">200,22</av:Size>
-                    </scg:Dictionary>
-                  </sap:WorkflowViewStateService.ViewState>
-                  <Throw DisplayName="Throw E-0101" Exception="[New BusinessRuleException(in_Config(&quot;Message_E-0101&quot;).ToString)]" sap:VirtualizedContainerService.HintSize="200,22" sap2010:WorkflowViewState.IdRef="Throw_1">
+                  <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Invoke GW_Evento_Documenti workflow" sap:VirtualizedContainerService.HintSize="579,87" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_10" UnSafe="False" WorkflowFileName="Navigazione\GW\GW_Evento_Documenti.xaml">
+                    <ui:InvokeWorkflowFile.Arguments>
+                      <InArgument x:TypeArguments="x:String" x:Key="inStrDocumentName">
+                        <mva:VisualBasicValue x:TypeArguments="x:String" ExpressionText="item" />
+                      </InArgument>
+                      <OutArgument x:TypeArguments="x:Boolean" x:Key="outBoolDocumentExists">
+                        <mva:VisualBasicReference x:TypeArguments="x:Boolean" ExpressionText="boolDocumentExist" />
+                      </OutArgument>
+                    </ui:InvokeWorkflowFile.Arguments>
                     <sap:WorkflowViewStateService.ViewState>
                       <scg:Dictionary x:TypeArguments="x:String, x:Object">
                         <x:Boolean x:Key="IsExpanded">True</x:Boolean>
                       </scg:Dictionary>
                     </sap:WorkflowViewStateService.ViewState>
-                  </Throw>
+                  </ui:InvokeWorkflowFile>
+                  <If Condition="[boolDocumentExist]" sap:VirtualizedContainerService.HintSize="579,235" sap2010:WorkflowViewState.IdRef="If_1">
+                    <If.Then>
+                      <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Invoke GW_Evento_Note workflow" sap:VirtualizedContainerService.HintSize="334,87" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_11" UnSafe="False" WorkflowFileName="Navigazione\GW\GW_Evento_Note.xaml">
+                        <ui:InvokeWorkflowFile.Arguments>
+                          <InArgument x:TypeArguments="sd:DataRow" x:Key="in_dataRowDocument">
+                            <mva:VisualBasicValue x:TypeArguments="sd:DataRow" ExpressionText="dataRowDocument" />
+                          </InArgument>
+                          <InArgument x:TypeArguments="x:String" x:Key="in_stringNSinistro">
+                            <mva:VisualBasicValue x:TypeArguments="x:String" ExpressionText="in_TransactionItem" />
+                          </InArgument>
+                        </ui:InvokeWorkflowFile.Arguments>
+                        <sap:WorkflowViewStateService.ViewState>
+                          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                          </scg:Dictionary>
+                        </sap:WorkflowViewStateService.ViewState>
+                      </ui:InvokeWorkflowFile>
+                    </If.Then>
+                    <If.Else>
+                      <Throw DisplayName="Throw E-13005" Exception="[New Exception(in_Config(&quot;Message_E-13005&quot;).ToString)]" sap:VirtualizedContainerService.HintSize="200,22" sap2010:WorkflowViewState.IdRef="Throw_2">
+                        <sap:WorkflowViewStateService.ViewState>
+                          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                          </scg:Dictionary>
+                        </sap:WorkflowViewStateService.ViewState>
+                      </Throw>
+                    </If.Else>
+                  </If>
+                </Sequence>
+              </ActivityAction>
+            </ui:ForEach.Body>
+          </ui:ForEach>
+          <FlowStep.Next>
+            <FlowStep x:Name="__ReferenceID3">
+              <sap:WorkflowViewStateService.ViewState>
+                <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                  <av:Point x:Key="ShapeLocation">200,406.5</av:Point>
+                  <av:Size x:Key="ShapeSize">200,51</av:Size>
+                  <av:PointCollection x:Key="ConnectorLocation">300,457.5 300,507.5</av:PointCollection>
+                </scg:Dictionary>
+              </sap:WorkflowViewStateService.ViewState>
+              <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Invoke GW_Evento_Piano-di-lavoro workflow" sap:VirtualizedContainerService.HintSize="200,51" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_12" UnSafe="False" WorkflowFileName="Navigazione\GW\GW_Evento_Piano-di-lavoro.xaml">
+                <ui:InvokeWorkflowFile.Arguments>
+                  <InArgument x:TypeArguments="x:String" x:Key="in_stringNSinistro">
+                    <mva:VisualBasicValue x:TypeArguments="x:String" ExpressionText="in_TransactionItem" />
+                  </InArgument>
+                </ui:InvokeWorkflowFile.Arguments>
+                <sap:WorkflowViewStateService.ViewState>
+                  <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                    <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+                  </scg:Dictionary>
+                </sap:WorkflowViewStateService.ViewState>
+              </ui:InvokeWorkflowFile>
+              <FlowStep.Next>
+                <FlowStep x:Name="__ReferenceID2">
+                  <sap:WorkflowViewStateService.ViewState>
+                    <scg:Dictionary x:TypeArguments="x:String, x:Object">
+                      <av:Point x:Key="ShapeLocation">200,507.5</av:Point>
+                      <av:Size x:Key="ShapeSize">200,51</av:Size>
+                    </scg:Dictionary>
+                  </sap:WorkflowViewStateService.ViewState>
+                  <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Invoke System_Move_Claim_Documents workflow" sap:VirtualizedContainerService.HintSize="200,51" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_13" UnSafe="False" WorkflowFileName="System\System_Move_Claim_Documents.xaml">
+                    <ui:InvokeWorkflowFile.Arguments>
+                      <InArgument x:TypeArguments="x:String" x:Key="in_TransactionItem">
+                        <mva:VisualBasicValue x:TypeArguments="x:String" ExpressionText="in_TransactionItem" />
+                      </InArgument>
+                      <InArgument x:TypeArguments="x:String" x:Key="in_stringPath">
+                        <mva:VisualBasicValue x:TypeArguments="x:String" ExpressionText="in_Config(&quot;CARD1_Uploader_Root_Path&quot;).Tostring" />
+                      </InArgument>
+                    </ui:InvokeWorkflowFile.Arguments>
+                  </ui:InvokeWorkflowFile>
                 </FlowStep>
-              </FlowDecision.False>
-            </FlowDecision>
+              </FlowStep.Next>
+            </FlowStep>
           </FlowStep.Next>
         </FlowStep>
       </FlowStep.Next>
     </FlowStep>
-    <x:Reference>__ReferenceID0</x:Reference>
-    <x:Reference>__ReferenceID1</x:Reference>
-    <FlowStep x:Name="__ReferenceID5">
+    <FlowStep x:Name="__ReferenceID4">
       <sap:WorkflowViewStateService.ViewState>
         <scg:Dictionary x:TypeArguments="x:String, x:Object">
-          <av:Point x:Key="ShapeLocation">200,114.5</av:Point>
+          <av:Point x:Key="ShapeLocation">200,117.5</av:Point>
           <av:Size x:Key="ShapeSize">200,51</av:Size>
-          <av:PointCollection x:Key="ConnectorLocation">300,165.5 300,204.5</av:PointCollection>
+          <av:PointCollection x:Key="ConnectorLocation">300,168.5 300,214.5</av:PointCollection>
         </scg:Dictionary>
       </sap:WorkflowViewStateService.ViewState>
-      <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Invoke GW_Ricerca workflow" sap:VirtualizedContainerService.HintSize="200,51" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_6" UnSafe="False" WorkflowFileName="Navigazione\GW\GW_Ricerca.xaml">
+      <ui:InvokeWorkflowFile ContinueOnError="{x:Null}" DisplayName="Invoke System_Retrieve_ClaimDocument_List workflow" sap:VirtualizedContainerService.HintSize="200,51" sap2010:WorkflowViewState.IdRef="InvokeWorkflowFile_7" UnSafe="False" WorkflowFileName="System\System_Retrieve_ClaimDocument_List.xaml">
         <ui:InvokeWorkflowFile.Arguments>
-          <InArgument x:TypeArguments="x:String" x:Key="in_sinistro">[in_TransactionItem]</InArgument>
+          <InArgument x:TypeArguments="scg:Dictionary(x:String, x:Object)" x:Key="in_Config">
+            <mva:VisualBasicValue x:TypeArguments="scg:Dictionary(x:String, x:Object)" ExpressionText="in_Config" />
+          </InArgument>
+          <OutArgument x:TypeArguments="scg:List(x:String)" x:Key="out_listStringDocumentList">
+            <mva:VisualBasicReference x:TypeArguments="scg:List(x:String)" ExpressionText="listStringClaimDocuments" />
+          </OutArgument>
+          <InArgument x:TypeArguments="x:String" x:Key="in_TransactionItem">
+            <mva:VisualBasicValue x:TypeArguments="x:String" ExpressionText="in_TransactionItem" />
+          </InArgument>
+          <InArgument x:TypeArguments="x:String" x:Key="in_stringPath">
+            <mva:VisualBasicValue x:TypeArguments="x:String" ExpressionText="in_Config(&quot;CARD1_Uploader_Root_Path&quot;).Tostring" />
+          </InArgument>
         </ui:InvokeWorkflowFile.Arguments>
-        <sap:WorkflowViewStateService.ViewState>
-          <scg:Dictionary x:TypeArguments="x:String, x:Object">
-            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
-          </scg:Dictionary>
-        </sap:WorkflowViewStateService.ViewState>
       </ui:InvokeWorkflowFile>
       <FlowStep.Next>
-        <x:Reference>__ReferenceID2</x:Reference>
+        <x:Reference>__ReferenceID0</x:Reference>
       </FlowStep.Next>
     </FlowStep>
+    <x:Reference>__ReferenceID1</x:Reference>
+    <x:Reference>__ReferenceID2</x:Reference>
     <x:Reference>__ReferenceID3</x:Reference>
-    <x:Reference>__ReferenceID4</x:Reference>
   </Flowchart>
 </Activity>

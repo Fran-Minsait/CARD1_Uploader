@@ -3,6 +3,7 @@
     <x:Property Name="out_listClaimDocuments" Type="OutArgument(scg:List(x:Object))" />
     <x:Property Name="in_TransactionItem" Type="InArgument(x:String)" />
     <x:Property Name="in_stringPath" Type="InArgument(x:String)" />
+    <x:Property Name="in_Config" Type="InArgument(scg:Dictionary(x:String, x:Object))" />
   </x:Members>
   <mva:VisualBasic.Settings>
     <x:Null />
@@ -62,7 +63,7 @@
       <AssemblyReference>System.Runtime.WindowsRuntime</AssemblyReference>
     </sco:Collection>
   </TextExpression.ReferencesForImplementation>
-  <Sequence DisplayName="System_Load_Claim_Excel" sap:VirtualizedContainerService.HintSize="376,279" sap2010:WorkflowViewState.IdRef="Sequence_1">
+  <Sequence DisplayName="System_Load_Claim_Excel" sap:VirtualizedContainerService.HintSize="663,519" sap2010:WorkflowViewState.IdRef="Sequence_1">
     <Sequence.Variables>
       <Variable x:TypeArguments="scg:IEnumerable(x:Object)" Name="IeNumerableRows" />
     </Sequence.Variables>
@@ -71,14 +72,28 @@
         <x:Boolean x:Key="IsExpanded">True</x:Boolean>
       </scg:Dictionary>
     </sap:WorkflowViewStateService.ViewState>
-    <ui:ReadColumn DisplayName="Read Column" sap:VirtualizedContainerService.HintSize="334,87" sap2010:WorkflowViewState.IdRef="ReadColumn_1" Result="[IeNumerableRows]" SheetName="Foglio1" StartingCell="D38" WorkbookPath="[in_stringPath+&quot;Excels\&quot;+in_TransactionItem + &quot;.xlsx&quot;]" />
-    <Assign sap:VirtualizedContainerService.HintSize="334,60" sap2010:WorkflowViewState.IdRef="Assign_1">
-      <Assign.To>
-        <OutArgument x:TypeArguments="scg:List(x:Object)">[out_listClaimDocuments]</OutArgument>
-      </Assign.To>
-      <Assign.Value>
-        <InArgument x:TypeArguments="scg:List(x:Object)">[IeNumerableRows.ToList]</InArgument>
-      </Assign.Value>
-    </Assign>
+    <If Condition="[File.Exists(in_stringPath+&quot;Excels\&quot;+in_TransactionItem + &quot;.xlsx&quot;)]" sap:VirtualizedContainerService.HintSize="621,427" sap2010:WorkflowViewState.IdRef="If_1">
+      <If.Then>
+        <Sequence sap:VirtualizedContainerService.HintSize="376,279" sap2010:WorkflowViewState.IdRef="Sequence_2">
+          <sap:WorkflowViewStateService.ViewState>
+            <scg:Dictionary x:TypeArguments="x:String, x:Object">
+              <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+            </scg:Dictionary>
+          </sap:WorkflowViewStateService.ViewState>
+          <ui:ReadColumn DisplayName="Read Column" sap:VirtualizedContainerService.HintSize="334,87" sap2010:WorkflowViewState.IdRef="ReadColumn_1" Result="[IeNumerableRows]" SheetName="Foglio1" StartingCell="D38" WorkbookPath="[in_stringPath+&quot;Excels\&quot;+in_TransactionItem + &quot;.xlsx&quot;]" />
+          <Assign sap:VirtualizedContainerService.HintSize="334,60" sap2010:WorkflowViewState.IdRef="Assign_1">
+            <Assign.To>
+              <OutArgument x:TypeArguments="scg:List(x:Object)">[out_listClaimDocuments]</OutArgument>
+            </Assign.To>
+            <Assign.Value>
+              <InArgument x:TypeArguments="scg:List(x:Object)">[IeNumerableRows.ToList]</InArgument>
+            </Assign.Value>
+          </Assign>
+        </Sequence>
+      </If.Then>
+      <If.Else>
+        <Throw DisplayName="Throw E-03001" Exception="[New BusinessRuleException(in_Config(&quot;Message_E-03001&quot;).ToString)]" sap:VirtualizedContainerService.HintSize="200,22" sap2010:WorkflowViewState.IdRef="Throw_1" />
+      </If.Else>
+    </If>
   </Sequence>
 </Activity>
